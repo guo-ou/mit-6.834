@@ -13,7 +13,7 @@ def green_test_message():
 		from IPython.display import display_html
 		display_html("""<div class="alert alert-success"><strong>Tests passed!!</strong></div>""", raw=True)
 	except:
-		print "Tests passed!!"
+		print ("Tests passed!!")
 
 def test_particle_filter(update_function):
 	world, path = execute.load_map_from_json("lake.json")
@@ -27,9 +27,9 @@ def test_particle_filter(update_function):
 	dist_err = world.robot_pose.distance_to(exp_loc.x, exp_loc.y)
 	if dist_err > 50:
 		raise AssertionError("Expected location must be 50 away from actual when window closed. Expected distance was " + str(round(dist_err, 1)))
-	print "Actual location  :  ( ", round(world.robot_pose.x, 1), ",", round(world.robot_pose.y, 1) ,")"
-	print "Expected location:  ( ", round(exp_loc.x, 1), ",", round(exp_loc.y, 1) ,")"
-	print "Distance error: ", round(dist_err, 1)
+	print ("Actual location  :  ( ", round(world.robot_pose.x, 1), ",", round(world.robot_pose.y, 1) ,")")
+	print ("Expected location:  ( ", round(exp_loc.x, 1), ",", round(exp_loc.y, 1) ,")")
+	print ("Distance error: ", round(dist_err, 1))
 	green_test_message()
 
 def test_localization(map_file_name, update_function, num_particles = 1200, sense_every = 4, resample_every = 6, sigma_forward = 3., sigma_angle = math.radians(5) ):
@@ -44,9 +44,9 @@ def test_localization(map_file_name, update_function, num_particles = 1200, sens
 	#after window is closed
 	exp_loc = localizer.expected_location()
 	dist_err = world.robot_pose.distance_to(exp_loc.x, exp_loc.y)
-	print "Actual location  :  ( ", round(world.robot_pose.x, 1), ",", round(world.robot_pose.y, 1) ,")"
-	print "Expected location:  ( ", round(exp_loc.x, 1), ",", round(exp_loc.y, 1) ,")"
-	print "Distance error: ", round(dist_err, 1)
+	print ("Actual location  :  ( ", round(world.robot_pose.x, 1), ",", round(world.robot_pose.y, 1) ,")")
+	print ("Expected location:  ( ", round(exp_loc.x, 1), ",", round(exp_loc.y, 1) ,")")
+	print ("Distance error: ", round(dist_err, 1))
 	green_test_message()
 
 def test_my_map(map_file_name):

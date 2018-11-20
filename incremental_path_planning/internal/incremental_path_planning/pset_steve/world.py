@@ -1,4 +1,7 @@
 from grid import *
+from IPython import display
+import time as time_library
+from tkinter import *
 
 TOLERANCE = 0.01
 
@@ -166,13 +169,19 @@ class World:
         return axes
 
     def draw_all_path(self, time_step=1, ground_truth=False):
-    	for time_index in range(0,self.time+1):
-    		temp = self.draw(at_time=time_index,animating=True, ground_truth=ground_truth)
-    		fig = temp.get_figure()
-    		fig.set_size_inches(10,10)
-    		display.display(fig)
-    		display.clear_output(wait=True)
-    		time_library.sleep(time_step)
+#        gui = Tk()
+#        gui.geometry("800x800")
+#        c = Canvas(gui ,width=800 ,height=800)
+#        c.pack()
+        for time_index in range(0,self.time+1):
+            temp = self.draw(at_time=time_index,animating=True, ground_truth=ground_truth)
+            fig = temp.get_figure()
+            fig.set_size_inches(10,10)
+            display.display(fig)
+            display.clear_output(wait=True)
+#            gui.update()
+            time_library.sleep(time_step)
+#        gui.mainloop()
 
     @property
     def robot_position(self):

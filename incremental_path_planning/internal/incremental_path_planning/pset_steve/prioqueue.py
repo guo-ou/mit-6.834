@@ -78,7 +78,11 @@ class PriorityQueue():
         return len(self.A)
 
     def __contains__(self, item):
-        return some(lambda x: x == item, self.A)
+        for x in self.A:
+            px = x[-1] == item
+            if px: return px
+        return False
+#        return some(lambda (_, x): x == item, self.A)
 
     def __getitem__(self, key):
         for _, item in self.A:

@@ -5,7 +5,8 @@ from matplotlib.collections import LineCollection, PolyCollection
 from matplotlib.patches import Ellipse
 from graph import Graph
 import time as time_library
-from IPython import display
+
+
 
 
 class WrongGridFormat(Exception):
@@ -90,10 +91,16 @@ class Grid(object):
                 value = lines[row][col]
                 if value not in ["0","1","S","G","R"]:
                     raise WrongGridFormat
+                elif value == "S":
+                    start = (col, num_rows-(row+1))
+                elif value == "G":
+                    goal = (col, num_rows-(row+1))
                 grid_array[col,num_rows-1 - row] = string2value(value)
 
         grid = grid_class(num_cols, num_rows, figsize)
         grid.grid_array = grid_array
+        grid.start = start
+        grid.goal = goal
 
         return grid
 
@@ -188,7 +195,7 @@ class Grid(object):
         x = list(map(lambda i: minx + cwidth*i, range(cols+1)))
         y = list(map(lambda i: miny + cheight*i, range(rows+1)))
 
-#        if(not animating):
+#        if not animating:
 #            plt.figure(figsize=self.figsize)
 #        else:
         plt.clf()
@@ -204,7 +211,6 @@ class Grid(object):
         plt.axis('off')
         self._draw_obstacles(plt.gca())
         self._draw_start_goal(plt.gca())
-
         return plt.gca()
 
     def _draw_obstacles(self, axes):

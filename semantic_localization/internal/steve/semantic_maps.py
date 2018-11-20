@@ -327,7 +327,7 @@ class Localizer:
                 try:
                     self.poses[i].log_prob = math.log(scores[i]) - math.log(sum_scores)
                 except:
-                    print a
+                    print(a)
 
     def motion_update(self, pose, d_forward, d_theta, in_place = True):
         '''

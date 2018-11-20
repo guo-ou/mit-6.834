@@ -2,7 +2,6 @@ import math
 import numpy as np
 import json
 
-
 from geo_utils import Pose
 from shapely.geometry import Point, Polygon
 from semantic_maps import *
@@ -76,7 +75,7 @@ def main():
     cmd = path_to_command(path, robot)
 
     simulate(cmd, world, localizer)
-    print "DONE"
+    print ("DONE")
 
 if __name__ == "__main__": 
     main()

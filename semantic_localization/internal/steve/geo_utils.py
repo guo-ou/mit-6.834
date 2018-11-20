@@ -101,27 +101,27 @@ class Pose:
             return Pose(x = self.x, y = self.y, theta = theta, log_prob = log_prob)
 
     def multiply_prob(self, times_prob):
-    	'''
-    	update prob to be prob * times_prob, and log_prob accordingly
-    	'''
-    	self.add_log_prob(math.log(times_prob))
+        '''
+        update prob to be prob * times_prob, and log_prob accordingly
+        '''
+        self.add_log_prob(math.log(times_prob))
 
     def add_log_prob(self, plus_log_prob):
-    	'''
-    	update log_prob to be log_prob + plus_log_prob, and prob accordingly
-    	'''
-    	try:
+        """
+        update log_prob to be log_prob + plus_log_prob, and prob accordingly
+        """
+        try:
             self.log_prob += plus_log_prob
-    	    self.prob = math.exp(self.log_prob)
+            self.prob = math.exp(self.log_prob)
         except:
-            print "*", self.prob, self.log_prob, plus_log_prob
+            print("*", self.prob, self.log_prob, plus_log_prob)
             self.prob = 0
             self.log_prob = -numpy.inf
 
 
     def bearing_to(self, x, y):
-    	dx = x - self.x
-    	dy = y - self.y
+        dx = x - self.x
+        dy = y - self.y
         if dx == 0:
         	angle = math.radians(90) * dy / abs(dy)
         else:

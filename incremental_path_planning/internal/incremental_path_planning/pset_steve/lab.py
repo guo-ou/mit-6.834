@@ -6,9 +6,7 @@ Created on Mon Nov 19 12:00:37 2018
 """
 
 from __future__ import division
-import math
 import numpy as np
-import matplotlib.pyplot as plt
 from tests import *
 from world import World
 from grid import *
@@ -24,13 +22,13 @@ inf = float("inf")
 #   1 -> obstacle
 #   S -> starting point
 #   G -> the goal
-grid_str = """0 0 0 0 S
-              0 1 1 1 0
-              0 1 1 1 1
-              0 1 0 1 G
-              0 0 0 0 0"""
-grid = Grid.create_from_str(grid_str)
-d = grid.draw()
+#grid_str = """0 0 0 0 S
+#              0 1 1 1 0
+#              0 1 1 1 1
+#              0 1 0 1 G
+#              0 0 0 0 0"""
+#grid = Grid.create_from_str(grid_str)
+#d = grid.draw()
 #In the drawing above, black cells represent obstacles, white cells are passable, the start node is green, and the goal node is red.
 
 #Convert your grid to a graph
@@ -54,9 +52,9 @@ d = grid.draw()
 # Recall that the robot started at (4,4). Hence, the first element of
 # the path argument is *not* (4,4), but is instead the *next* step for
 # the robot.
-world = World(grid, (4, 4))
+#world = World(grid, (4, 4))
 #world.update_world([(3,3),(3,2),(3,1),(4,0)])
-d = world.draw()
+#d = world.draw()
 
 # Start with a fresh world with the robot at start position (4,4), and
 #  call update_world several times, each time with the new "intended path"
@@ -89,7 +87,7 @@ def grid_heuristic(node1, node2):
     2
     """
     # YOUR CODE HERE
-    return max(abs(node1[0] - node2[0]), abs(node1[1] - node2[1]))
+    return max(map(abs, [node1[i]-node2[i] for i in (0,1)]))
 
 def calc_key_helper(node, g, rhs, start, key_modifier, heuristic=grid_heuristic):
     """
@@ -108,11 +106,9 @@ def calc_key_helper(node, g, rhs, start, key_modifier, heuristic=grid_heuristic)
     (521,21)
     """
     # YOUR CODE HERE
-    val2 = min(g[node], rhs[node])
-    val1 = key_modifier + heuristic(start, node) + val2
-#    print(val1, ', ',val2)
-    return (val1, val2)
-
+    min_g_rhs = min([g[node], rhs[node]])
+    return (min_g_rhs + heuristic(start, node) + key_modifier, min_g_rhs)
+#
 #test_grid_heuristic(grid_heuristic)
 #test_calc_key_helper(calc_key_helper)
 #test_ok()
@@ -124,87 +120,153 @@ def update_vertex_helper(node, g, rhs, goal, graph, queue):
     queue status. Returns nothing.
     """
     # YOUR CODE HERE
-#    print('\nnode ', node, ', g ', g, ', rhs ', rhs, ', goal ', goal, ', graph ', graph)
-    val = 0
-    for succ in graph.get_successors(node):
-        val += graph.get_edge_weight(node, succ)
-    rhs[node] = val
-    queue.remove(node)
+    #update rhs value
+    if node != goal:
+        rhs[node] = min([graph.get_edge_weight(node, neighbor) + g[neighbor]
+                         for neighbor in graph.get_successors(node)])
+    #update queue status
+    if node in queue:
+        queue.remove(node)
+    if g[node] != rhs[node]:
+        queue.insert(node)
     
-test_update_vertex_helper(update_vertex_helper)
-test_ok()
+#test_update_vertex_helper(update_vertex_helper)
+#test_ok()
 
-#def compute_shortest_path_helper(g, rhs, start, goal, key_modifier, graph, queue):
-#    """As in the D* Lite pseudocode, this method computes (or recomputes) the
-#    shortest path by popping nodes off the queue, updating their g and rhs
-#    values, and calling update_vertex on their neighbors.  Returns nothing."""
-#    # Helper functions that take in only one argument, node:
-#    def calc_key(node):
-#        return calc_key_helper(node, g, rhs, start, key_modifier)
-#    def update_vertex(node):
-#        return update_vertex_helper(node, g, rhs, goal, graph, queue)
-#    
-#    # YOUR CODE HERE
-#    raise NotImplementedError
-#
-#
+def compute_shortest_path_helper(g, rhs, start, goal, key_modifier, graph, queue):
+    """As in the D* Lite pseudocode, this method computes (or recomputes) the
+    shortest path by popping nodes off the queue, updating their g and rhs
+    values, and calling update_vertex on their neighbors.  Returns nothing."""
+    # Helper functions that take in only one argument, node:
+    def calc_key(node):
+        return calc_key_helper(node, g, rhs, start, key_modifier)
+    def update_vertex(node):
+        return update_vertex_helper(node, g, rhs, goal, graph, queue)
+
+#    verbose = False #set this to True to enable print statements below
+    
+#    if verbose: print('> COMPUTE SHORTEST PATH')
+    while True:
+        smallest_key = queue.top_key()
+        if smallest_key >= calc_key(start) and rhs[start] == g[start]:
+            return
+        node = queue.pop()
+#        if verbose: print('> dequeue node', node, 'with h =', grid_heuristic(node, start))
+        if smallest_key < calc_key(node):
+#            print(smallest_key, calc_key(node), node)
+            queue.insert(node)
+        elif g[node] > rhs[node]:
+            g[node] = rhs[node]
+            for next_node in graph.get_predecessors(node):
+                update_vertex(next_node)
+        else:
+            g[node] = inf
+            for next_node in graph.get_predecessors(node) + [node]:
+                update_vertex(next_node)
+
 #test_compute_shortest_path_helper(compute_shortest_path_helper,calc_key_helper)
 #test_ok()
-#
-#
-#def dstar_lite(problem):
-#    """Performs D* Lite to incrementally find a shortest path as the robot
-#    moves through the graph.  Updates the IncrementalSearchProblem, problem, by
-#    calling problem.update_world.  The search terminates when the robot either
-#    reaches the goal, or finds that there is no path to the goal.  Returns the
-#    modified problem.
-#
-#    Note: The world is dynamic, so the true positions of obstacles may change as
-#    the robot moves through the world.  However, if the robot determines at any
-#    point that there is no finite path to the goal, it should stop searching and
-#    give up, rather than waiting and hoping that the world will improve.
-#    """
-#
-#    ############################################################################
-#    # INITIALIZE
-#
-#    # Get the start node, goal node, and graph from the IncrementalSearchProblem
-#    start = problem.start_node
-#    goal = problem.goal_node
-#    graph = problem.get_graph()
-#
-#    # Set g=inf and rhs=inf for all nodes, except the goal node, which has rhs=0
-#    g = {node:inf for node in graph.get_all_nodes()}
-#    rhs = {node:inf for node in graph.get_all_nodes()}
-#    rhs[goal] = 0
-#
-#    # Set the key modifier k_m to 0
-#    key_modifier = 0
-#
-#    # Define shortened helper functions
-#    def calc_key(node):
-#        return calc_key_helper(node, g, rhs, start, key_modifier)
-#    queue = None # to be reinitialized later
-#    def update_vertex(node):
-#        return update_vertex_helper(node, g, rhs, goal, graph, queue)
-#    def compute_shortest_path():
-#        return compute_shortest_path_helper(g, rhs, start, goal, key_modifier, graph, queue)
-#    heuristic = grid_heuristic
-#
-#    # Initialize the queue using the priority function calc_key
-#    queue = PriorityQueue(f=lambda node: calc_key(node))
-#    queue.insert(goal)
-#
-#    ############################################################################
-#    # YOUR CODE HERE
-#    raise NotImplementedError
-#    
-#    return problem
-#
+
+def dstar_lite(problem):
+    """Performs D* Lite to incrementally find a shortest path as the robot
+    moves through the graph.  Updates the IncrementalSearchProblem, problem, by
+    calling problem.update_world.  The search terminates when the robot either
+    reaches the goal, or finds that there is no path to the goal.  Returns the
+    modified problem.
+
+    Note: The world is dynamic, so the true positions of obstacles may change as
+    the robot moves through the world.  However, if the robot determines at any
+    point that there is no finite path to the goal, it should stop searching and
+    give up, rather than waiting and hoping that the world will improve.
+    """
+
+    ############################################################################
+    # INITIALIZE
+
+    # Get the start node, goal node, and graph from the IncrementalSearchProblem
+    start = problem.start_node
+    goal = problem.goal_node
+    graph = problem.get_graph()
+
+    # Set g=inf and rhs=inf for all nodes, except the goal node, which has rhs=0
+    g = {node:inf for node in graph.get_all_nodes()}
+    rhs = {node:inf for node in graph.get_all_nodes()}
+    rhs[goal] = 0
+
+    # Set the key modifier k_m to 0
+    key_modifier = 0
+
+    # Define shortened helper functions
+    def calc_key(node):
+        return calc_key_helper(node, g, rhs, start, key_modifier)
+    def update_vertex(node):
+        return update_vertex_helper(node, g, rhs, goal, graph, queue)
+    def compute_shortest_path():
+        return compute_shortest_path_helper(g, rhs, start, goal, key_modifier, graph, queue)
+    heuristic = grid_heuristic
+
+    # Initialize the queue using the priority function calc_key
+    queue = PriorityQueue(f=lambda node: calc_key(node))
+    queue.insert(goal)
+
+    ############################################################################
+    verbose = False #set this to True to enable print statements below
+    
+    # Begin algorithm
+    last_start = start
+    compute_shortest_path()
+    print('robot starting at:', start, ' to :', goal)
+
+    while start != goal:
+        if g[start] == inf:
+            if verbose: print("no path found")
+            return problem
+        start = min(graph.get_successors(start),
+                    key = lambda neighbor: (graph.get_edge_weight(start, neighbor)
+                                            + g[neighbor]))
+        old_graph = graph.copy()
+        if verbose: print(' robot moving to:', start, end='')
+        intended_path = get_intended_path(start, goal, graph, g)
+#        if verbose: print('intended path:', intended_path)
+        graph = problem.update_world(intended_path)
+        changed_edges = old_graph.get_changed_edges(graph)
+        if changed_edges:
+            key_modifier = key_modifier + heuristic(last_start, start)
+            last_start = start
+            for (old_edge, new_edge) in changed_edges:
+                if old_edge and new_edge: #edge simply changed weight
+                    update_vertex(old_edge.source)
+                elif not old_edge: #new edge was added
+                    raise NotImplementedError("Edge addition not yet supported")
+                else: #old edge was deleted
+                    raise NotImplementedError("Edge deletion not yet supported")
+            try:
+                compute_shortest_path()
+            except:
+                print("no path found")
+                break
+    print('end search')
+    return problem #contains path traversed, intended future path, and other info
+
 ## This test uses the example from page 6 of Koenig & Likhachev's paper, referenced above.
 #test_dstar_lite(dstar_lite)
 #test_ok()
-#
-#hard_problem_done = run_dstar_lite_hard_grid(dstar_lite)
-#hard_problem_done.draw_all_path(time_step=0.5)
 
+def go(file, t=0.1):
+    with open(file, "r") as f:
+        grid_str_hard = f.read()
+    
+    grid_hard = Grid.create_from_str(grid_str_hard)
+    print(grid_hard.start, ', ', grid_hard.goal)
+    world_hard = World(grid_hard, grid_hard.start, vision_radius=3)
+    problem_hard = IncrementalSearchProblem(world_hard, grid_hard.start, grid_hard.goal)
+    problem = problem_hard.copy()
+    dstar_lite(problem)
+    problem._world.draw_all_path(t)
+
+if __name__ == '__main__':
+#    file = "grids/hard_grid.txt"
+#    file = "grids/small_grid.txt"
+#    file = "grids/big_grid.txt"
+    file = "grids/impossible.txt"
+    go(file)

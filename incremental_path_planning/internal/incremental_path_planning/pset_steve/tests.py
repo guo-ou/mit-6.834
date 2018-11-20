@@ -51,49 +51,6 @@ graph_triangle.add_edge("A", "B", 2, bidirectional=False)
 graph_triangle.add_edge("B", "C", 3, bidirectional=False)
 graph_triangle.add_edge("A", "C", 7, bidirectional=False)
 
-# hard grid problem (from 16.410 pset)
-#with open("grids/hard.txt", "r") as f:
-#    grid_str_hard = f.read()
-grid_str_hard = """
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 S 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 0 0 0 1 1 0 0 0
-0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 1 0 0 0 1 1 0 0 0
-0 0 0 0 0 0 1 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 0 0 1 1 1 1 1 1 0 1 1
-0 0 0 0 0 0 1 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 0 0 1 0 0 0 0 0 0 0 1
-0 1 1 1 1 1 1 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 1 1 1
-0 1 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0
-0 0 1 1 1 1 0 0 0 0 0 0 0 1 1 1 0 0 0 1 1 1 1 0 0 0 0 1 1 0 0 1 1 1 0 0 1 1 1 0
-0 0 1 1 1 1 1 1 0 0 0 0 0 0 1 1 0 0 0 0 1 0 0 0 1 0 0 1 1 0 0 1 0 0 0 0 0 0 1 0
-0 0 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 1 0
-0 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 1 0 0 1 0 0 0 0 0 0 1 0
-0 0 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0
-0 0 0 0 1 1 0 0 0 0 0 1 1 1 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 0 0 0 0 0 0 1 0
-0 0 0 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0
-0 0 0 0 0 0 0 0 0 1 0 1 1 1 0 0 0 1 1 0 0 0 0 0 0 1 1 1 1 1 0 1 0 0 0 0 0 0 1 0
-0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 0 0 0 0 0 1 1 1 0 0 0 0 1 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 0 1 1 1 1 1 1 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0
-0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 1 0 0 0 0 1 0 0
-0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 1 1 1 1 1 0 0
-0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 1 1 G 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0 1 1 1 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 1 1 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-"""
-
-#print grid_str_hard
-grid_hard = Grid.create_from_str(grid_str_hard)
-robot_start_hard = (20,29) #grid is 40 columns by 30 rows
-world_hard = World(grid_hard, robot_start_hard, vision_radius=3)
-goal_hard = (34,4)
-problem_hard = IncrementalSearchProblem(world_hard, robot_start_hard, goal_hard)
-
 #### TESTS #####################################################################
 
 def test_grid_heuristic(grid_heuristic):
@@ -146,6 +103,7 @@ def test_update_vertex_helper(update_vertex_helper):
     assert g == g_original #not modified
     assert rhs == dict(A=9)
     assert graph == graph_triangle #not modified
+    #problem here
     assert queue == expected_queue
 
     # Test 3: triangle problem; A not in queue, do insert
@@ -161,8 +119,6 @@ def test_update_vertex_helper(update_vertex_helper):
     assert g == g_original #not modified
     assert rhs == dict(A=9)
     assert graph == graph_triangle #not modified
-    print(queue)
-    print(expected_queue)
     assert queue == expected_queue
 
     # Test 4: triangle problem; A in queue, remove and re-insert
@@ -177,6 +133,7 @@ def test_update_vertex_helper(update_vertex_helper):
     assert g == g_original #not modified
     assert rhs == dict(A=9, B="other_stuff")
     assert graph == graph_triangle #not modified
+    #problem here
     assert queue == expected_queue
 
     # Test 5: triangle problem; B has only one successor
@@ -264,15 +221,3 @@ def test_dstar_lite(dstar_lite):
     assert result == problem_simple_complete
     assert problem == problem_simple_complete #check that problem was modified
 #    print "dstar_lite test passed!\n"
-
-def run_dstar_lite_hard_grid(dstar_lite):
-    print ("Running dstar_lite on a 40x30 grid...")
-#    print grid_str_hard
-    start_time = time.time()
-    problem = problem_hard.copy()
-    dstar_lite(problem)
-    end_time = time.time()
-    print ("Robot reached goal in %s seconds\n" % str(end_time - start_time))
-    # Instead of drawing all_path here, return world so the user can call draw_all_path:
-    return problem._world
-    #problem._world.draw_all_path()
