@@ -35,14 +35,14 @@ def maybe_download(filename, work_directory):
   if not tf.gfile.Exists(work_directory):
     tf.gfile.MakeDirs(work_directory)
   filepath = os.path.join(work_directory, filename)
-  if not tf.gfile.Exists(filepath):
-    with tempfile.NamedTemporaryFile() as tmpfile:
-      temp_file_name = tmpfile.name
-      urllib.request.urlretrieve(SOURCE_URL + filename, temp_file_name)
-      tf.gfile.Copy(temp_file_name, filepath)
-      with tf.gfile.GFile(filepath) as f:
-        size = f.Size()
-      print('Successfully downloaded', filename, size, 'bytes.')
+#  if not tf.gfile.Exists(filepath):
+#    with tempfile.NamedTemporaryFile() as tmpfile:
+#      temp_file_name = tmpfile.name
+#      urllib.request.urlretrieve(SOURCE_URL + filename, temp_file_name)
+#      tf.gfile.Copy(temp_file_name, filepath)
+#      with tf.gfile.GFile(filepath) as f:
+#        size = f.Size()
+#      print('Successfully downloaded', filename, size, 'bytes.')
   return filepath
 
 

@@ -14,7 +14,7 @@ def search(board, time_budget):
     chosen_action = None
     player_color = board.turn
 
-    for depth in xrange(2,24,2):
+    for depth in range(2,24,2):
         _, new_chosen_action = alpha_beta(player_color, board, depth, -INFINITY, INFINITY, True, deadline)
         if not chosen_action or (new_chosen_action and time.time() <= deadline):
             chosen_action = new_chosen_action
@@ -66,8 +66,8 @@ def heuristic(player_color, board, debug=False):
 
     debug_state = copy.deepcopy(board.state)
 
-    for col in xrange(len(board.state)):
-        for row in xrange(len(board.state[col])):
+    for col in range(len(board.state)):
+        for row in range(len(board.state[col])):
             blank = board.state[col][row]
             if blank != game.ConnectFourBoard.EMPTY:
                 continue

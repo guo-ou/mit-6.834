@@ -20,7 +20,7 @@ def test_ok():
         <strong>Tests passed!!</strong>
         </div>""", raw=True)
     except:
-        print "Tests passed!!"
+        print ("Tests passed!!")
 
 
 def check_offline_scheduler(fn, N=100, epsilon=1e-10):
@@ -28,7 +28,7 @@ def check_offline_scheduler(fn, N=100, epsilon=1e-10):
     # Students may (or may not) use randomization in their scheduler algorithm.
     # In case they do, take a Monte-carlo approach and try their scheduler fn
     # a bunch of times to makes sure it works
-    for i in xrange(N):
+    for i in range(N):
         schedule = fn(stn, 'A')
         satisfied, explanation = check_schedule_against_stn(stn, schedule, epsilon=epsilon)
         if not satisfied:

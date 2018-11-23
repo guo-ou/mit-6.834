@@ -26,7 +26,7 @@ class OpticParser():
 
 
 def pretty_print_activity(activity):
-    print "\033[33m{:7.3f}:\033[0m \033[1m{}\033[0m \033[32m[{}]\033[0m".format(activity['time_start'], activity['activity'], activity['duration'])
+    print ("\033[33m{:7.3f}:\033[0m \033[1m{}\033[0m \033[32m[{}]\033[0m".format(activity['time_start'], activity['activity'], activity['duration']))
 
 
 def open_visualizer(activities):
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     op = OpticParser(optic_output)
     if op.solution_found():
         activities = op.parse()
-        print "\033[1;32mSolution found!\033[0m"
+        print ("\033[1;32mSolution found!\033[0m")
         for activity in activities:
             pretty_print_activity(activity)
 
@@ -50,5 +50,5 @@ if __name__ == '__main__':
         # print json.dumps(activities)
         open_visualizer(activities)
     else:
-        print "\033[1;31mNo solution found! Here is full planner output:\033[0m"
-        print optic_output
+        print ("\033[1;31mNo solution found! Here is full planner output:\033[0m")
+        print (optic_output)

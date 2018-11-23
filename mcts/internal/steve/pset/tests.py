@@ -37,9 +37,10 @@ def test_default_policy_simple_win(default_policy):
 
         ok_(end_board.is_terminal())
     except Exception as ex:
-        print "Exception occured testing default_policy on board:"
+        print ("Exception occured testing default_policy on board:")
         board.visualize()
         raise ex
+    print("test passed")
 
 def test_default_policy_simple_loss(default_policy):
     spy = Spy()
@@ -78,9 +79,10 @@ def test_default_policy_simple_loss(default_policy):
         assert_equal(reward, black_end_board.reward_vector())
         ok_(black_end_board.is_terminal())
     except Exception as ex:
-        print "Exception occured testing default_policy on board:"
+        print ("Exception occured testing default_policy on board:")
         board.visualize()
         raise ex
+    print("test passed")
 
 def test_default_policy_termination(default_policy):
     spy = Spy()
@@ -92,9 +94,10 @@ def test_default_policy_termination(default_policy):
         assert_equal(reward, end_board.reward_vector())
         ok_(end_board.is_terminal())
     except Exception as ex:
-        print "Exception occured testing default_policy on board:"
+        print ("Exception occured testing default_policy on board:")
         board.visualize()
         raise ex
+    print("test passed")
 
 def test_expand(expand):
     spy = Spy()
@@ -128,9 +131,10 @@ def test_expand(expand):
                     new_children.append(child)
         print_ok()
     except Exception as ex:
-        print "Exception occured testing expand on board:"
+        print ("Exception occured testing expand on board:")
         board.visualize()
         raise ex
+    print("test passed")
 
 def test_best_child(best_child):
     board = ConnectFourBoard()
@@ -140,7 +144,7 @@ def test_best_child(best_child):
     children = [Node(action.apply(board), action, parent) for action in actions]
     parent.num_visits = len(children)
 
-    for i in xrange(len(children)):
+    for i in range(len(children)):
         child = children[i]
         child.q = (i+1)**2
         child.num_visits = i+1
@@ -157,12 +161,14 @@ def test_best_child(best_child):
     ok_(best_correct_0 is best_chosen_0)
     ok_(best_correct_5 is best_chosen_5)
 
+    print("test passed")
     print_ok()
 
 def test_tree_policy(tree_policy, expand, best_child):
     test_tree_policy_expand_first_node(tree_policy, expand, best_child)
     test_tree_policy_select_best_child(tree_policy, expand, best_child)
     test_tree_policy_terminate(tree_policy, expand, best_child)
+    print("test passed")
     print_ok()
 
 def test_tree_policy_expand_first_node(tree_policy, expand, best_child):
@@ -216,10 +222,10 @@ def test_backup(backup):
     parent = Node(board)
     l = [parent]
     
-    for i in xrange(depth):
+    for i in range(depth):
         action = list(parent.get_board().get_legal_actions())[0]
         action.col = i % 2
-        action.row = i / 2
+        action.row = i // 2
         board = action.apply(board)
         child = Node(board, action, parent)
         parent.add_child(child)
@@ -235,7 +241,8 @@ def test_backup(backup):
         ok_(parent.num_visits == 1)
         q = -q
         parent = parent.get_parent()
-
+    
+    print("test passed")
     print_ok()
 
 def test_uct(uct):
@@ -278,7 +285,7 @@ def test_uct(uct):
             test_pass = False
             for iteration in range(10):
                 my_action = uct(boards[test], 1.0)
-                print my_action
+                print (my_action)
                 if hash(my_action) == hash(solutions[test]):
                     correct_count += 1
             if correct_count >= 9:
@@ -287,7 +294,7 @@ def test_uct(uct):
             test += 1
         print_ok()
     except Exception as ex:
-        print "Exception occured testing uct on board:"
+        print ("Exception occured testing uct on board:")
         boards[test].visualize()
         raise ex
 
@@ -299,7 +306,7 @@ def print_ok():
         <strong>Tests passed!!</strong>
         </div>""", raw=True)
     except:
-        print "Tests passed!!"
+        print ("Tests passed!!")
 
 class Spy(object):
 
@@ -309,8 +316,8 @@ class Spy(object):
 def make_tied_state():
     state = make_empty_state()
 
-    for col in xrange(ConnectFourBoard.NUM_COLS):
-        for row in xrange(ConnectFourBoard.NUM_ROWS):
+    for col in range(ConnectFourBoard.NUM_COLS):
+        for row in range(ConnectFourBoard.NUM_ROWS):
             piece = ConnectFourBoard.RED
             if (row / 2) % 2 == col % 2:
                 piece = ConnectFourBoard.BLACK
@@ -318,7 +325,7 @@ def make_tied_state():
     return state
 
 def make_empty_state():
-    return [[ConnectFourBoard.EMPTY for j in xrange(ConnectFourBoard.NUM_ROWS)] for i in xrange(ConnectFourBoard.NUM_COLS)]
+    return [[ConnectFourBoard.EMPTY for j in range(ConnectFourBoard.NUM_ROWS)] for i in range(ConnectFourBoard.NUM_COLS)]
 
 class SpyingConnectFourBoard(ConnectFourBoard):
 
@@ -326,7 +333,7 @@ class SpyingConnectFourBoard(ConnectFourBoard):
         self.spy = spy
 
         if state is None:
-            self.state = [[ConnectFourBoard.EMPTY for j in xrange(ConnectFourBoard.NUM_ROWS)] for i in xrange(ConnectFourBoard.NUM_COLS)]
+            self.state = [[ConnectFourBoard.EMPTY for j in range(ConnectFourBoard.NUM_ROWS)] for i in range(ConnectFourBoard.NUM_COLS)]
             self.turn = ConnectFourBoard.RED
         else:
             self.state = state
@@ -337,9 +344,9 @@ class SpyingConnectFourBoard(ConnectFourBoard):
     def get_legal_actions(self):
         actions = set()
 
-        for col in xrange(len(self.state)):
+        for col in range(len(self.state)):
             column = self.state[col]
-            for row in xrange(len(column)):
+            for row in range(len(column)):
                 if column[row] == ConnectFourBoard.EMPTY:
                     actions.add(SpyingConnectFourAction(self.spy, self.turn, col, row))
                     break

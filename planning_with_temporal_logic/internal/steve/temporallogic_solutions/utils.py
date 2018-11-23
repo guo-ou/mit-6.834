@@ -10,7 +10,7 @@ def test_ok():
         <strong>Tests passed!!</strong>
         </div>""", raw=True)
     except:
-        print "Tests passed!!"
+        print ("Tests passed!!")
 
 def check_equal(activities1, activities2):
     p1 = Plan(activities1)

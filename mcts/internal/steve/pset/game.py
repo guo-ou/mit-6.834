@@ -86,7 +86,7 @@ class ConnectFourBoard(Board):
     The symbol '-' means no piece is at that coordinate.
     """
     RED = 'R'
-    BLACK = 'B'
+    BLACK = 'X'
     EMPTY = '-'
     NUM_COLS = 7
     NUM_ROWS = 6
@@ -99,7 +99,7 @@ class ConnectFourBoard(Board):
         """
 
         if state is None:
-            self.state = [[ConnectFourBoard.EMPTY for j in xrange(ConnectFourBoard.NUM_ROWS)] for i in xrange(ConnectFourBoard.NUM_COLS)]
+            self.state = [[ConnectFourBoard.EMPTY for j in range(ConnectFourBoard.NUM_ROWS)] for i in range(ConnectFourBoard.NUM_COLS)]
             self.turn = ConnectFourBoard.RED
         else:
             self.state = state
@@ -110,9 +110,9 @@ class ConnectFourBoard(Board):
     def get_legal_actions(self):
         actions = set()
         
-        for col in xrange(len(self.state)):
+        for col in range(len(self.state)):
             column = self.state[col]
-            for row in xrange(len(column)):
+            for row in range(len(column)):
                 if column[row] == ConnectFourBoard.EMPTY:
                     actions.add(ConnectFourAction(self.turn, col, row))
                     break
@@ -129,8 +129,8 @@ class ConnectFourBoard(Board):
             return True
 
         # if every slot is filled, then we've reached a terminal state
-        for col in xrange(ConnectFourBoard.NUM_COLS):
-            for row in xrange(ConnectFourBoard.NUM_ROWS):
+        for col in range(ConnectFourBoard.NUM_COLS):
+            for row in range(ConnectFourBoard.NUM_ROWS):
                 if self.state[col][row] == ConnectFourBoard.EMPTY:
                     return False
 
@@ -148,7 +148,7 @@ class ConnectFourBoard(Board):
         # horizontal
         min_col = max(0, col-3)
         max_col = min(ConnectFourBoard.NUM_COLS-1, col+3)
-        four_in_row = self._check_seq(color, [self.state[i][row] for i in xrange(min_col, max_col+1)])
+        four_in_row = self._check_seq(color, [self.state[i][row] for i in range(min_col, max_col+1)])
         if four_in_row:
             return True
 
@@ -213,15 +213,14 @@ class ConnectFourBoard(Board):
     def _check_seq(self, color, seq):
         length = len(seq)
 
-        for i in xrange(length-3):
+        for i in range(length-3):
             four = True
-            for j in xrange(4):
+            for j in range(4):
                 if seq[i+j] != color:
                     four = False
                     break
             if four:
                 return True
-
         return False
 
     def reward_vector(self):
@@ -231,25 +230,22 @@ class ConnectFourBoard(Board):
         
             if color == ConnectFourBoard.RED:
                 return (1,-1)
-            else:
-                return (-1,1)
+            return (-1,1)
 
         return (0,0)
 
     def current_player_id(self):
         if self.turn == ConnectFourBoard.RED:
             return 0
-        else:
-            return 1
+        return 1
 
     def visualize(self):
-        print
-        for row in xrange(ConnectFourBoard.NUM_ROWS):
+        for row in range(ConnectFourBoard.NUM_ROWS):
             row = ConnectFourBoard.NUM_ROWS - row - 1
-            line = [self.state[col][row] for col in xrange(ConnectFourBoard.NUM_COLS)]
+            line = [self.state[col][row] for col in range(ConnectFourBoard.NUM_COLS)]
             line = ' '.join(line)
-            print '{} '.format(row) + line
-        print '  ' + ' '.join([str(col) for col in xrange(ConnectFourBoard.NUM_COLS)])
+            print('{} '.format(row) + line)
+        print('  ' + ' '.join([str(col) for col in range(ConnectFourBoard.NUM_COLS)]))
 
     def __copy__(self):
         new_state = copy.deepcopy(self.state)
@@ -380,16 +376,16 @@ class ConnectFourHumanPlayer(Player):
                 col = int(m.group(1))
                 row = int(m.group(2))
             else:
-                print 'Incorrect format. Syntax: [COLUMN NUMBER] [ROW NUMBER]'
+                print ('Incorrect format. Syntax: [COLUMN NUMBER] [ROW NUMBER]')
                 continue
 
             if col >= 0 and col < ConnectFourBoard.NUM_COLS and row >= 0 and row < ConnectFourBoard.NUM_ROWS:
                 action = ConnectFourAction(board.turn, col, row)
             else:
-                print 'Coordinate out of range: 0 <= COLUMN NUMBER <= {}, 0 <= ROW NUMBER <= {}'.format(ConnectFourBoard.NUM_COLS-1, ConnectFourBoard.NUM_ROWS-1)
+                print ('Coordinate out of range: 0 <= COLUMN NUMBER <= {}, 0 <= ROW NUMBER <= {}'.format(ConnectFourBoard.NUM_COLS-1, ConnectFourBoard.NUM_ROWS-1))
 
             if not board.is_legal_action(action):
-                print '{} is not a legal action on this board.'.format(action)
+                print ('{} is not a legal action on this board.'.format(action))
                 action = None
 
         return action
@@ -410,8 +406,7 @@ class ComputerPlayer(Player):
     def choose_action(self, board):
         if self.time_limit:
             return self.algo(board, self.time_limit)
-        else:
-            return self.algo(board)
+        return self.algo(board)
 
 
 class Node(object):

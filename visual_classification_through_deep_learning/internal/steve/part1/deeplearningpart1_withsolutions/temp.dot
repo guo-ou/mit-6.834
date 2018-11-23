@@ -1,0 +1,8 @@
+digraph G {
+  rankdir=LR;
+dpi=60
+  "x" [shape=circle, width=0.6, fixedsize=true];
+  "n1" [shape=circle, width=0.6, fixedsize=true];
+  "y" [shape=circle, width=0.6, fixedsize=true];
+  "-1" [shape=circle, width=0.6, fixedsize=true];
+  "x" -> "n1" [label="1"];  "y" -> "n1" [label="1"];  "-1" -> "n1" [label="1.5"];}

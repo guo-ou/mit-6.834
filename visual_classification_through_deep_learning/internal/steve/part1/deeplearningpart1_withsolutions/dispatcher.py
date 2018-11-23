@@ -63,7 +63,7 @@ class Dispatcher():
         return t
 
     def print_time_message(self, message, time):
-        print "\033[33m{:08.4f}\033[0m: {}".format(time, message)
+        print ("\033[33m{:08.4f}\033[0m: {}".format(time, message))
 
     def simulate_disturbance(self):
         delay = np.random.random() * self.disturbance_max_delay

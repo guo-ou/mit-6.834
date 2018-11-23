@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<launch>
+
+    <!-- Start up the activity_server_template.py file  -->
+    <node name="activity_server_template" pkg="activity_template" type="activity_server_template.py" output="screen">
+    </node>
+
+</launch>

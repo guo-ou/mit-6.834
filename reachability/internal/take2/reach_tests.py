@@ -13,10 +13,12 @@ def test_ok():
         <strong>Tests passed!!</strong>
         </div>""", raw=True)
     except:
-        print "Tests passed!!"
+        print("Tests passed!!")
 
 def test_get_reachable(get_reachable_by_step):
-    result =  str(get_reachable_by_step([state(0,0)],3)) == "[S(-2,3), S(1,0), S(0,-3), S(-2,1), S(1,2), S(-1,-1), S(1,-2), S(2,2), S(2,0), S(0,0), S(0,6), S(-2,-1), S(0,8), S(0,-2), S(1,4), S(-1,3), S(1,6), S(-1,5), S(0,4), S(1,1), S(0,-1), S(-2,2), S(-1,-2), S(1,3), S(-1,1), S(-2,0), S(-1,0), S(1,5), S(0,2), S(2,3), S(2,1), S(2,-1), S(0,5), S(0,3), S(0,7), S(0,9), S(-1,2), S(3,0), S(0,1), S(1,-1), S(-1,4), S(-3,0), S(-1,6)]"
+    var = str(get_reachable_by_step([state(0,0)],3))
+    print(var)
+    result =  var == "[S(-2,3), S(1,0), S(0,-3), S(-2,1), S(1,2), S(-1,-1), S(1,-2), S(2,2), S(2,0), S(0,0), S(0,6), S(-2,-1), S(0,8), S(0,-2), S(1,4), S(-1,3), S(1,6), S(-1,5), S(0,4), S(1,1), S(0,-1), S(-2,2), S(-1,-2), S(1,3), S(-1,1), S(-2,0), S(-1,0), S(1,5), S(0,2), S(2,3), S(2,1), S(2,-1), S(0,5), S(0,3), S(0,7), S(0,9), S(-1,2), S(3,0), S(0,1), S(1,-1), S(-1,4), S(-3,0), S(-1,6)]"
     if not result:
         raise Exception("Does not pass test!")
         
@@ -28,14 +30,14 @@ def test_get_reach(get_reach_by_step):
 
 def test_intersection(get_intersection, states):
     obstacles = [obstacle("tree",[state(1,0)]),obstacle("tree",[state(5,5)])]
-    result =  str( get_intersection(states,obstacles) ) == "[S(1,0)]"
+    result = str( get_intersection(states,obstacles) ) == "[S(1,0)]"
     if not result:
         raise Exception("Does not pass test!")
 
 def graph_states(states):
     M=10
     N=10
-    zvals = [ [0]*M for _ in xrange(N) ] #np.random.rand(10,10)*10-5
+    zvals = [ [0]*M for _ in range(N) ] #np.random.rand(10,10)*10-5
 
     for my_state in states:
         if my_state.x >= 0 and my_state.y >= 0 and my_state.x < 10 and my_state.y < 10:
@@ -55,7 +57,7 @@ def graph_states(states):
 def graph_state_interesections(get_intersection,states,obstacles):
     M=10
     N=10
-    zvals = [ [0]*M for _ in xrange(N) ] #np.random.rand(10,10)*10-5
+    zvals = [ [0]*M for _ in range(N) ] #np.random.rand(10,10)*10-5
 
     for my_state in states:
         if my_state.x >= 0 and my_state.y >= 0 and my_state.x < 10 and my_state.y < 10:
@@ -84,7 +86,7 @@ def graph_state_interesections(get_intersection,states,obstacles):
 def draw_init_map():
     M=10
     N=10
-    zvals = [ [0]*M for _ in xrange(N) ] #np.random.rand(10,10)*10-5
+    zvals = [ [0]*M for _ in range(N) ] #np.random.rand(10,10)*10-5
 
     zvals[2][2] = 1
     

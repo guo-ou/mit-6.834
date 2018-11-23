@@ -1,6 +1,8 @@
 import time
 import random
-from game import *
+from tests import *
+from game import Node
+from sim import *
 
 ###########################################################
 # monte carlo tree search algorithm using UCT heuristic
@@ -8,6 +10,7 @@ from game import *
 #        time limit of calculation in second
 # Output: class Action represents the best action to take
 ##########################################################
+
 def uct(board, time_limit):
     # record start time
     start_time = time.time()
@@ -21,6 +24,8 @@ def uct(board, time_limit):
         
     return best_child(root, 0).get_action()
 
+#test_uct(uct)
+
 ###########################################################
 # heuristically search to the leaf level
 # Input: a node that want to search down and the
@@ -31,9 +36,10 @@ def tree_policy(node, c):
     while not node.get_board().is_terminal():
         if not node.is_fully_expanded():
             return expand(node)
-        else:
-            node = best_child(node, c)
+        node = best_child(node, c)
     return node
+
+#test_tree_policy(tree_policy, expand, best_child)
 
 ###########################################################
 # expand a node since it is not fully expanded
@@ -62,6 +68,8 @@ def expand(node):
     node.add_child(child)
     return child
 
+#test_expand(expand)
+
 ###########################################################
 # get the best child from this node (using heuristic)
 # Input: a node, which we want to find the best child of
@@ -74,19 +82,21 @@ def best_child(node, c):
     child, _ = max(pairs, key=lambda p: p[1])
     return child
 
-###########################################################
+#test_best_child(best_child)
+
+#######################################################################
 # randomly picking moves to reach the end game
-# Input: a board that want to start randomly picking moves
-#        the color of computer (black or red)
+# Input: BOARD, the board that we want to start randomly picking moves
 # Output: the reward vector when the game terminates
-###########################################################
+#######################################################################
 def default_policy(board):
     while not board.is_terminal():
         actions = board.get_legal_actions()
         action = random.choice(list(actions))
         board = action.apply(board)
-
     return board.reward_vector()
+
+#test_default_policy(default_policy)
 
 ###########################################################
 # reward update for the tree after one simulation
@@ -100,3 +110,8 @@ def backup(node, reward_vector):
         node.q += reward_vector[node.get_parent().get_player_id()]
         node = node.get_parent()
     node.visit()
+
+#test_backup(backup)
+
+if __name__=="__main__":
+    run_final_test(uct, 2)

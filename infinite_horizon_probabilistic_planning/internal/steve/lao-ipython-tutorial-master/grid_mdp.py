@@ -152,8 +152,8 @@ class GridMDP(object):
 
         cwidth, cheight = self.cell_size
 
-        x = map(lambda i: minx + cwidth*i, range(cols+1))
-        y = map(lambda i: miny + cheight*i, range(rows+1))
+        x = list(map(lambda i: minx + cwidth*i, range(cols+1)))
+        y = list(map(lambda i: miny + cheight*i, range(rows+1)))
 
         f = plt.figure(figsize=self.figsize)
         hlines = np.column_stack(np.broadcast_arrays(x[0], y, x[-1], y))
@@ -195,7 +195,7 @@ class GridMDP(object):
   
     def draw_policy(self, pi):
          chars = {'(1,0)':'>', '(0,1)':'^', '(-1,0)':'<', '(0,-1)':'v', None: '.'}
-         for (s, action) in pi.iteritems():
+         for (s, action) in pi.items():
              center = self.cell_center(int(s[1]), int(s[3]))
              self.axes.text(center[0], center[1]-0.2, chars[action], fontsize=12)
   

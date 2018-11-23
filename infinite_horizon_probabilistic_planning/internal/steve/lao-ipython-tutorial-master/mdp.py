@@ -29,7 +29,15 @@ def argmax(seq, fn):
 
 #______________________________________________________________________________
 
+
 class MDP:
+    """
+    Class that represents Markov decision problem as:
+        -states: set of states
+        -actlist: a list of actions
+        -transitions: dictionary of (state, action) tuples and associated dictionaries containing state and probabilities
+        -reward: dictionay, immediate reward received after transitioning to a state
+    """
     def __init__(self, states, actions, init, reward, transitions, terminals, gamma, obstacles = [], grid_size = None):
         self.states = states            # a list of strings
         self.reward = reward            # a dictionary: states -> reward
@@ -56,15 +64,13 @@ class MDP:
         method if you need to specialize by state."""
         if state in self.terminals:
             return [None]
-        else:
-            return self.actlist
+        return self.actlist
 
     def to_grid(self):
         if self.grid_size:
             cols = self.grid_size[0]
             rows = self.grid_size[1]
             grid = GridMDP(cols, rows)
-    
             for i in range(cols):
                 for j in range(rows):
                     s = '(' + str(i) + ',' + str(j)+ ')'
@@ -74,12 +80,9 @@ class MDP:
                         grid.mark_cell_as(i, j, CELL_GOAL)
                     elif s == self.init:
                         grid.mark_cell_as(i, j, CELL_START)
-    
                     grid.set_cell_reward(i, j, self.R(s))
-    
             return grid
-        else:
-            print "No grid size specified"
+        print ("No grid size specified")
 
 def read_mdp(fname, gamma = 0.9):
     init = None
@@ -90,6 +93,7 @@ def read_mdp(fname, gamma = 0.9):
     actions = set()
     grid_size = None
     obstacles = []
+    
     def update(s, a, s1, p):
         """ Update a transition entry """
         states.add(s)
@@ -100,7 +104,8 @@ def read_mdp(fname, gamma = 0.9):
             dist[s1] = dist[s1] + float(p)
         else:
             dist[s1] = float(p)
-        transitions[(s,a)] = dist        
+        transitions[(s,a)] = dist
+    
     for line in open(fname, 'r'):
         if not line: continue
         vals = line.split()
@@ -125,20 +130,20 @@ def read_mdp(fname, gamma = 0.9):
             for i in range(2, len(vals), 2):
                 update(s, a, vals[i], vals[i+1])
 
-    if not init: raise Exception, 'No init state specified'
+    if not init: raise Exception('No init state specified')
 
     # Normalize transition distributions that need it.
     updates = []
     for sa, dist in transitions.items():
         p = sum([pi for pi in dist.values()])
-        if p == 0: raise Exception, 'Zero probability transition'
+        if p == 0: raise Exception('Zero probability transition')
         if abs(p - 1.0) > 0.001:
-            print 'Normalizing distribution for', sa
+            print ('Normalizing distribution for', sa)
             updates.append((sa, dict([(si, pi/p) for (si, pi) in dist.items()])))
     for (sa, dist) in updates:
         transitions[sa] = dist
 
-    print 'States=', len(states), 'Actions=', len(actions), 'Terminals', len(terminals)
+    print ('States=', len(states), 'Actions=', len(actions), 'Terminals', len(terminals))
         
     return MDP(list(states), list(actions), init, reward, transitions, terminals, gamma, obstacles, grid_size)
 
@@ -148,7 +153,7 @@ def read_mdp(fname, gamma = 0.9):
 
 def expected_utility(a, s, U, mdp):
     "The expected utility of doing a in state s, according to the MDP and U."
-    return sum([p*U[s1]*mdp.gamma for (s1,p) in mdp.T(s,a).iteritems()])
+    return sum([p*U[s1]*mdp.gamma for (s1,p) in mdp.T(s,a).items()])
 
 
 def policy_iteration(mdp):
